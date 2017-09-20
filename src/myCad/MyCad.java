@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 public class MyCad extends JFrame implements ActionListener{
@@ -36,7 +38,7 @@ public class MyCad extends JFrame implements ActionListener{
 	//定义文件对象
 	private MyFile file;
 	//定义图形栏
-	private JToolBar shapebar;
+	private JPanel shapebar;
 	private JToolBar toolbar;
 	//定义按钮
 	private JButton[] btShape;
@@ -125,7 +127,7 @@ public class MyCad extends JFrame implements ActionListener{
 	private void setToolbar() {
 		toolbar = new JToolBar();
 		toolbar.setBackground(new Color(225, 255, 255));
-		String[] btToolName = {"            ", "Color", "Move", "Size"};
+		String[] btToolName = {"Color", "Move", "Size"};
 		btTool = new JButton[btToolName.length];
 		
 		for (int i=0; i < btTool.length; i++) {
@@ -143,25 +145,25 @@ public class MyCad extends JFrame implements ActionListener{
 	}
 	
 	private void setShapebar() {
-		shapebar = new JToolBar();
+		shapebar = new JPanel();
+		shapebar.setLayout(new FlowLayout(0, 0, 0));
 		String[] btShapeName = {"Liner", "Rect", "Circ", "Word"};
 		btShape = new JButton[btShapeName.length];
 		
-		for (int i=0; i < btTool.length; i++) {
+		for (int i=0; i < btShapeName.length; i++) {
 			btShape[i] = new JButton(btShapeName[i]);
-			btShape[i].setBorderPainted(false);
+			btShape[i].setBorderPainted(true);
 			btShape[i].setBackground(Color.WHITE);
 	    	shapebar.add(btShape[i]);
 	    	btShape[i].addActionListener(this);
-	    	btShape[i].setContentAreaFilled(false);
+	    	btShape[i].setPreferredSize(new Dimension(100, 40));
 		}
+		btShape[0].setBackground(Color.CYAN);
 		shapebar.setBackground(Color.LIGHT_GRAY);
-		shapebar.setFloatable(false);
-		shapebar.setOrientation(1); 			// 1 表示工具栏纵向放置
-		shapebar.setPreferredSize(new Dimension(50, 50));
+		shapebar.setPreferredSize(new Dimension(100, 100));
 	}
 	
-	public void setStratBar(String s) {
+	public void setStatusBar(String s) {
 		statusbar.setText(s);
 	}
 	
@@ -169,33 +171,31 @@ public class MyCad extends JFrame implements ActionListener{
 		for (int i = 0; i < this.btShape.length; i++) {
 			btShape[i].setBackground(Color.WHITE);
 		}
-		button.setBackground(Color.LIGHT_GRAY);
+		button.setBackground(Color.CYAN);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO 事件处理
 		if (e.getSource() == btShape[0]) {
 			canvas.setCurrentShape(0);
-			canvas.createNewitem();
 			canvas.repaint();
 			setbtShapeColor(btShape[0]);
 		}
 		else if (e.getSource() == btShape[1]) {
 			canvas.setCurrentShape(1);
-			canvas.createNewitem();
+			canvas.createNewShape();
 			canvas.repaint();
 			setbtShapeColor(btShape[1]);
 		}
 		else if (e.getSource() == btShape[2]) {
 			canvas.setCurrentShape(2);
-			canvas.createNewitem();
+			canvas.createNewShape();
 			canvas.repaint();
 			setbtShapeColor(btShape[2]);
 		}
 		else if (e.getSource() == btShape[3]) {
 			canvas.setCurrentShape(3);
-			canvas.createNewitem();
+			canvas.createNewShape();
 			canvas.repaint();
 			setbtShapeColor(btShape[3]);
 		}
@@ -211,7 +211,7 @@ public class MyCad extends JFrame implements ActionListener{
 		else if(e.getSource() == exit) {
 			System.exit(0);
 		}
-		else if(e.getSource() == btTool[1]) {
+		else if(e.getSource() == btTool[0]) {
 			canvas.chooseColor();
 		}
 		else if(e.getSource() == about ) {

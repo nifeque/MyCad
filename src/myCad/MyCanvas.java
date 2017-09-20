@@ -6,16 +6,16 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import java.awt.event.MouseMotionAdapter;
+import java.util.LinkedList;
 
 @SuppressWarnings("serial")
 public class MyCanvas extends JPanel{
 	private MyCad mycad;
-    Shape[] itemList =new Shape[5000];
+    private LinkedList<Shape> shapeList = new LinkedList<Shape>();
     
     private int currentShape = 0;
     private int index = 0;
     private Color color = Color.black; 
-    private int R,G,B; 
 	public MyCanvas(MyCad mycad) {
 		this.mycad = mycad;
 		
@@ -23,50 +23,65 @@ public class MyCanvas extends JPanel{
 		setBackground(Color.white); 
 		addMouseListener(new MousePass()); 
 		addMouseMotionListener(new MouseMotion());
-		 createNewitem();
-		
+		createNewShape();
 	}
     
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g; 
-		int  j = 0;
-		while(j<=index)
-		{
-			draw(g2d, itemList[j]);
-			j++;
-	    }
-		
+		for (int j=0; j<=index; j++) {
+			draw(g2d, shapeList.get(j));
+		}
 	}
+	
 	void draw(Graphics2D g2d , Shape shape) {
 		shape.draw(g2d); 
 	}
 	
 	//新建一个图形的基本单元对象的程序段
-	void createNewitem(){
+	void createNewShape(){
+		if (index == shapeList.size()) {
+			shapeList.add(null);
+		}
+		Shape shape = null;
 		switch(currentShape){
 		case 0: 
-			itemList[index] = new Line();
+			shape = new Line();
 			break;
 		case 1: 
-			itemList[index] = new Rect();
+			shape = new Rect();
 			break;
 		case 2: 
-			itemList[index] = new Circle();
+			shape = new Circle();
 			break;
 		case 3: 
-			itemList[index] = new Word();
+			shape = new Word();
 			break;
-		}	
-		itemList[index].type = currentShape;
-		itemList[index].R = R;
-		itemList[index].G = G;
-		itemList[index].B = B;
+		}
+		shapeList.set(index, shape);
+		shapeList.get(index).type = currentShape;
+		shapeList.get(index).setColor(color);
+		
+	}
+	
+	public Shape getShape(int index) {
+		return shapeList.get(index);
+	}
+	
+	public void addShape(Shape shape) {
+		shapeList.add(shape);
+	}
+	
+	public void removeAllShape() {
+		index = shapeList.size();
+		while (--index > 0) {
+			shapeList.remove(index);
+		}
 		
 	}
    
-    public void setIndex(int x){ 
-    	index = x;
+    public void setIndex(int index){ 
+    	this.index = index;
     }
     
     public int getIndex(){ 
@@ -82,67 +97,58 @@ public class MyCanvas extends JPanel{
 	}
     
 	public void chooseColor() {
-		color = JColorChooser.showDialog(mycad, "setColor", color);
+		this.color = JColorChooser.showDialog(mycad, "setColor", color);
 		try {
-			R = color.getRed();
-			G = color.getGreen();
-			B = color.getBlue();
+			shapeList.get(index).setColor(color);
 		} catch (Exception e) {
-			R = 0;
-			G = 0;
-			B = 0;
+			color = new Color(0, 0, 0);
 		}
-		itemList[index].R = R;
-		itemList[index].G = G;
-		itemList[index].B = B;
+		shapeList.get(index).setColor(color);
 	}
 
 	
 	private class MousePass extends MouseAdapter {
 
 		@Override
-		public void mouseEntered(MouseEvent me) {
-			mycad.setStratBar("coordinate: ["+me.getX()+" ,"+me.getY()+"]");
+		public void mouseEntered(MouseEvent e) {
+			mycad.setStatusBar("coordinate: ["+e.getX()+" ,"+e.getY()+"]");
 		}
 	
 		@Override
-		public void mouseExited(MouseEvent me) {
-			mycad.setStratBar("coordinate: ["+me.getX()+" ,"+me.getY()+"]");
+		public void mouseExited(MouseEvent e) {
+			mycad.setStatusBar("coordinate: ["+e.getX()+" ,"+e.getY()+"]");
 		}
 	
 		@Override
-		public void mousePressed(MouseEvent me) {
-			mycad.setStratBar("coordinate: ["+me.getX()+" ,"+me.getY()+"]");
-			
-			int x = me.getX();
-			int y = me.getY();
-			itemList[index].x1  = x;
-			itemList[index].y1  = y;
+		public void mousePressed(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
+			mycad.setStatusBar("coordinate: ["+x+" ,"+y+"]");
+			shapeList.get(index).getStartPoint().setPoint(x, y);
 	
 		}
 	
 		@Override
-		public void mouseReleased(MouseEvent me) {
-			mycad.setStratBar("coordinate: ["+me.getX()+" ,"+me.getY()+"]");
-			itemList[index].x2 = me.getX();
-			itemList[index].y2 = me.getY();
+		public void mouseReleased(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
+			mycad.setStatusBar("coordinate: ["+x+" ,"+y+"]");
+			shapeList.get(index).getEndtPoint().setPoint(x, y);
 			repaint();
 			index++;
-			createNewitem();
+			createNewShape();
 		}
 
 }
 
 	private class MouseMotion extends MouseMotionAdapter {
-		public void mouseDragged(MouseEvent me) {
-			itemList[index].x2 = me.getX();
-			itemList[index].y2 = me.getY();
+		public void mouseDragged(MouseEvent e) {
+			int x = e.getX(), y = e.getY();
+			shapeList.get(index).getEndtPoint().setPoint(x, y);
 			repaint();
-			mycad.setStratBar("coordinate: ["+me.getX()+" ,"+me.getY()+"]");
+			mycad.setStatusBar("coordinate: ["+x+" ,"+y+"]");
 		}
 		
-		public void mouseMoved(MouseEvent me) {
-    	  mycad.setStratBar("coordinate: ["+me.getX()+" ,"+me.getY()+"]");
+		public void mouseMoved(MouseEvent e) {
+    	  mycad.setStatusBar("coordinate: ["+e.getX()+" ,"+e.getY()+"]");
 		}
 	}
 

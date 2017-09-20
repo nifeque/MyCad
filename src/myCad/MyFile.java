@@ -17,8 +17,9 @@ public class MyFile {
 		canvas.setIndex(0);
 		canvas.setCurrentShape(0); 
 		canvas.setColor(Color.black); 
-		canvas.createNewitem();
+		canvas.createNewShape();
 		canvas.repaint();
+		canvas.removeAllShape();
 	}
 
 	public void openFile() {
@@ -46,9 +47,9 @@ public class MyFile {
 				{
 					canvas.setIndex(i);
 					inputRecord = (Shape)input.readObject();
-					canvas.itemList[i] = inputRecord;
+					canvas.addShape(inputRecord);
 				}
-				canvas.createNewitem();
+				canvas.createNewShape();
 				input.close();
 				canvas.repaint();
 			} catch (FileNotFoundException e) {
@@ -86,7 +87,7 @@ public class MyFile {
 				
 				for(int i = 0;i<canvas.getIndex() ;i++)
 				{
-					Shape p = canvas.itemList[i];
+					Shape p = canvas.getShape(i);
 					output.writeObject(p);
 					output.flush(); 
 					                

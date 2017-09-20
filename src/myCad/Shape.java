@@ -6,50 +6,67 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Shape implements Serializable {
-
-	int x1,x2,y1,y2;   	     
-	int  R,G,B;				 
+	protected Color color;
+	protected MyPoint start = new MyPoint(), end = new MyPoint();
+	
 	int type;				 
-	String s1;				 
-	String s2;			 
+	String s;				 
 
-	public void draw(Graphics2D g2d ){} 
+	public void draw(Graphics2D g2d ) {}
+	
+	public MyPoint getStartPoint() {
+		return start;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public MyPoint getEndtPoint() {
+		return end;
+	}
+
 }
-
+	
 @SuppressWarnings("serial")
 class Line extends Shape 
-{
+{	
 	public void draw(Graphics2D g2d) {
-		g2d.setPaint(new Color(R, G, B)); 
-		 
-		g2d.drawLine(x1, y1, x2, y2); 
+		g2d.setPaint(color); 
+		g2d.drawLine(start.getX(), start.getY(), end.getX(), end.getY()); 
 	}
+	
 }
+
 @SuppressWarnings("serial")
 class Rect extends Shape{ 
+	
 	public void draw(Graphics2D g2d ){
-		g2d.setPaint(new Color(R,G,B));
+		g2d.setPaint(color);
 		
-		g2d.drawRect(Math.min(x1, x2), Math.min(y2, y2), Math.abs(x1-x2), Math.abs(y1-y2));
+		g2d.drawRect(Math.min(start.getX(), end.getX()), Math.min(start.getY(), end.getY()),
+				Math.abs(start.getX()-end.getX()), Math.abs(start.getY()-end.getY()));
 	}
 }
 
 @SuppressWarnings("serial")
 class Circle extends Shape{ 
 	public void draw(Graphics2D g2d ){
-		g2d.setPaint(new Color(R,G,B));
+		g2d.setPaint(color);
 		
-		g2d.drawOval(Math.min(x1, x2), Math.min(y2, y2), Math.max(Math.abs(x1-x2), 
-				Math.abs(y1-y2)), Math.max(Math.abs(x1-x2), Math.abs(y1-y2)));
+		g2d.drawOval(Math.min(start.getX(), end.getX()), Math.min(start.getY(), end.getY()), 
+				Math.max(Math.abs(start.getX()-end.getX()), Math.abs(start.getY()-end.getY())), 
+				Math.max(Math.abs(start.getX()-end.getX()), Math.abs(start.getY()-end.getY())));
 	}
 }
 
 @SuppressWarnings("serial")
 class Word extends Shape{ 
+	
 	public void draw(Graphics2D g2d ){
-		g2d.setPaint(new Color(R,G,B));
-	    if(s1 != null) {
-	    	g2d.drawString(s1, x1,y1);
+		g2d.setPaint(color);
+	    if(s != null) {
+	    	g2d.drawString(s, start.getX(),start.getX());
 	    }
 	}
 }
