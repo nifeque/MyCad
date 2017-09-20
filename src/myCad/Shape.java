@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Shape implements Serializable {
 
 	int x1,x2,y1,y2;   	     
@@ -15,6 +16,7 @@ public class Shape implements Serializable {
 	public void draw(Graphics2D g2d ){} 
 }
 
+@SuppressWarnings("serial")
 class Line extends Shape 
 {
 	public void draw(Graphics2D g2d) {
@@ -23,6 +25,7 @@ class Line extends Shape
 		g2d.drawLine(x1, y1, x2, y2); 
 	}
 }
+@SuppressWarnings("serial")
 class Rect extends Shape{ 
 	public void draw(Graphics2D g2d ){
 		g2d.setPaint(new Color(R,G,B));
@@ -31,6 +34,7 @@ class Rect extends Shape{
 	}
 }
 
+@SuppressWarnings("serial")
 class Circle extends Shape{ 
 	public void draw(Graphics2D g2d ){
 		g2d.setPaint(new Color(R,G,B));
@@ -40,6 +44,7 @@ class Circle extends Shape{
 	}
 }
 
+@SuppressWarnings("serial")
 class Word extends Shape{ 
 	public void draw(Graphics2D g2d ){
 		g2d.setPaint(new Color(R,G,B));

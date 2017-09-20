@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import java.awt.event.MouseMotionAdapter;
 
+@SuppressWarnings("serial")
 public class MyCanvas extends JPanel{
 	private MyCad mycad;
     Shape[] itemList =new Shape[5000];

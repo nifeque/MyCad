@@ -3,6 +3,7 @@ package myCad;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("serial")
 public class Help extends JFrame {
 	private MyCad  mycad;
 	public Help(MyCad mycad) {

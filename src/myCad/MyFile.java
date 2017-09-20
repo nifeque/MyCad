@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.io.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.*;
 
 public class MyFile {
 	private MyCad mycad;
